@@ -1,7 +1,7 @@
 ## Manual For The Quiz App Demo  
-A web application written in JavaScript, CSS, and HTML. The application is a straightforward quiz where the user is asked questions about web programming or development concepts. 
+A web application written in JavaScript, CSS, and HTML. The application is a straightforward quiz where the user is asked questions about web development. 
 
-The user is given a set amount of time to answer questions, after selecting an answer they will be shown if they are correct or not. At the end their points will be totaled and they will be prompted to play again.  
+The user is given a set amount of time to answer each question, after selecting an answer they will be shown if they are correct or not. At the end, their points will be totaled and they will be prompted to play again.  
 
 ## Functionalities and Features
 - A simplistic and intuitive UI
@@ -20,11 +20,11 @@ The user is given a set amount of time to answer questions, after selecting an a
 
 	- The body features the question in bold, highly visible font, along with four possible answers to the question
 
-		- After a user selects a possible answer (of if time runs out) the correct answer will be highlighted in green
+		- After a user selects a possible answer (or if time runs out) the correct answer will be highlighted in green
 
 		- If the user selected a wrong answer, that answer will be highlighted in red
 
-	- The footer has a line dividing it from the body along with an indication to the user one how many questions are left
+	- The footer has a line dividing it from the body along with an indication to the user on how many questions are left
 
 - Upon completion the user will be shown an ending screen
 
@@ -79,7 +79,7 @@ The root directory consists of four items:
 
 ### /index.html
 #### Importing JavaScript files
-- The head is standard, the header includes links to the CSS file, an online font repository, and Javascript files
+- The head is standard, the head includes links to the CSS file, an online font repository, and Javascript files
 ```html
 	<script src="js/questions.js" defer></script>
 
@@ -113,7 +113,7 @@ The root directory consists of four items:
 <p align="right"><sub>index.html lines 24 - 37</sub></p>
 
 - The instructions (“info_box”) that describe to the user how the quiz works
-	- The button of this box includes two buttons, wrapped in a class called “buttons:”, one name “quit” and the other named “restart”
+	- The button of this box includes two buttons, wrapped in a class called “buttons”, one name “quit” and the other named “restart”
 ```html
 	<div class="quiz_box">
 	    	<header>
@@ -144,7 +144,7 @@ The root directory consists of four items:
 ```
 <p align="right"><sub>index.html lines 40 - 65</sub></p>
 
-- The “quiz_box which can be broken down into a header, body section, and footer
+- The “quiz_box can be broken down into a header, body section, and footer
 	- The header includes both the countdown timer (“timer_sec”) and the progress bar (“time_line”)
 	- The section consists of the question text and question possible answers (which will be added from the questions.js file) for each question
 	- And the footer contains the question total (which will let the user know which question they are on out of five), and the next question button (“next_button”)
@@ -166,11 +166,12 @@ The root directory consists of four items:
 <p align="right"><sub>index.html lines 68 - 80</sub></p>
 
 - The bottom of the body contains the “results_box” which will be used to tell the user what score they got
+	- This element is not shown right away, it will be called to later
 	- Similar to that element “info-box” as “results_box” also ends in a class of buttons consisting of a restart and quit button
 
 
 ### /js/questions.js
-- A data structure to organize information about each question
+- A data structure used to organize information about each question
 - The file stores an array, questions, which stores multiple objects
 ```javascript
 	let questions = [
@@ -191,12 +192,12 @@ The root directory consists of four items:
 
 - Each array element consists of the following information
   
-	1. numb: The number the question is
+	1. numb: The number of the question
 	2. question: The question text
 	3. answer: The correct answer
-	4. options: An array of possible answers (composed of 4 strings)
+	4. options: An array of possible answers (composed of 4 Strings)
 
-- One of the answers in the array will be the same as the answer listed in the array
+- One of the options in the array will be the same as the answer listed in the array
 - This data will be used by quizApp.js to dynamically change HTML elements as the user progresses through the web application 
 
 ### /js/quizApp.js
@@ -222,7 +223,7 @@ The root directory consists of four items:
 
 - The file starts with establishing variables which contain elements from index.html
 	- This is done so these elements can be altered (for the case for info_box result_box etc) or to add EventListeners for buttons (start_btn restart etc)
-- As we are creating variables that are "parents" of other elements, in some cases parent.querySelector() can be used over document.querySelector
+- In some cases parent.querySelector() can be used over document.querySelector if we are getting an element that is a child of a parent we already have stored in a variable
 	- See exit_btn and continue_btn
 #### Adding Functionalities To Buttons
 ```javascript
@@ -239,7 +240,7 @@ The root directory consists of four items:
 ```
 <p align="right"><sub>quizApp.js lines 17 - 25</sub></p>
 
-- While looking through index.html, there were elements listed that are no visible on the page when you first open it, that is because this application is designed around the concept of using buttons to hide or reveal information
+- While looking through index.html, there were elements listed that are not visible on the page when you first open it, that is because this application is designed around the concept of using buttons to hide or reveal information
 - The sample code showcases how EventListeners are added to buttons to alter the HTML structure
 - startQuiz "adds" the active
 ```javascript
@@ -256,7 +257,7 @@ The root directory consists of four items:
 <p align="right"><sub>quizApp.js lines 28 - 35</sub></p>
 
 - This code section adds the functionality of the "start" button that becomes visible as the user is viewing the quiz info panel
-- In short what this piece of code does is get rid of all the current information presented for how the quiz runs replaces it with information pertaining to the first question, it also starts the timer up so it can count down from 15 to 0
+- In short what this piece of code does is get rid of all the current information presented for how the quiz runs and replaces it with information pertaining to the first question, it also starts the timer up so it can countdown from 15 to 0
 ```javascript
 	restart_quiz.addEventListener("click", (e) => {
 	  quiz_box.classList.add("activeQuiz"); //show quiz box
@@ -316,7 +317,7 @@ The root directory consists of four items:
 
 - This code section adds the functionality of the "next question" button that becomes visible after the user selects an answer or the timer runs out
 - If the program still has questions to show (i.e. the current question number isn't 5) increment the question number and count and use those new values to update the screen to show the next quiz question and possible answers
-- If the quiz is current on question 5, go to the results screen to show the user their score
+- If the quiz is currently on question 5, go to the results screen to show the user their score
 ```javascript
 	function showQuetions(index) {
   		const que_text = document.querySelector(".que_text");
@@ -410,9 +411,9 @@ The root directory consists of four items:
 ```
 <p align="right"><sub>quizApp.js lines 140 - 163</sub></p>  
 
-- The function first checks if the user answered correctly or wrong
-	- If the user answered correct, their tracked score will go up and the answer button will turn green
- 	- If the user answered wrong, the answer button will turn red
+- The function first checks if the user answered correctly or not
+	- If the user answered correctly, their tracked score will go up and the answer button they clicked will turn green
+ 	- If the user answered incorrectly, the answer button they clicked will turn red
 - The program also goes through the options and adds in the green color to the correct answer manually
 	- This is done for the case where the user does not select the right answer, they still need to be shown what the correct one was even if they did not select it
 - The final for loop is the function preventing the user from clicking another button (by disabling all the other answer buttons) after the user has selected an answer
@@ -477,9 +478,9 @@ The root directory consists of four items:
 <p align="right"><sub>quizApp.js lines 204 - 247</sub></p>  
 
 - Some of the final methods are handling the timer operations
-- startTimer takes in an input and countsdown from that input to zero, all while dymaically altering the text on screen to match
-	- For styling, the function will check if the time is lower than ten, and add a zero in front of the current time if so to keep the "##" format
-- startTimerLine also takes in the time anse users the current time to add a progress bar to visually show the user how much time they have left
+- startTimer takes in an input and counts down from that input to zero, all while dymaically altering the text on screen to match
+	- For styling, the function will check if the time is lower than ten, and add a zero in front of the current time, if so, to keep the "##" format
+- startTimerLine starts a timer so it can dynamically display a progress bar to visually show the user how much time they have left
 ```javascript
 	function queCounter(index) {
 	  //creating a new span tag and passing the question number and total question
