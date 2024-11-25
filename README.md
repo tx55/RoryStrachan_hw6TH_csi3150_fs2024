@@ -1,5 +1,5 @@
 ## Manual For The Quiz App Demo  
-A web application written in JavaScript (using React), CSS, and HTML. The application is a straightforward quiz where the user is asked questions about web programming or development concepts. 
+A web application written in JavaScript, CSS, and HTML. The application is a straightforward quiz where the user is asked questions about web programming or development concepts. 
 
 The user is given a set amount of time to answer questions, after selecting an answer they will be shown if they are correct or not. At the end their points will be totaled and they will be prompted to play again.  
 
@@ -190,11 +190,52 @@ The root directory consists of four items:
 
 - Each array element consists of the following information
   
-1. numb: The number the question is
-2. question: The question text
-3. answer: The correct answer
-4. options: An array of possible answers (composed of 4 strings)
+	1. numb: The number the question is
+	2. question: The question text
+	3. answer: The correct answer
+	4. options: An array of possible answers (composed of 4 strings)
 
 - One of the answers in the array will be the same as the answer listed in the array
 - This data will be used by quizApp.js to dynamically change HTML elements as the user progresses through the web application 
 
+### /js/quizApp.js
+- The file that is dynamically changing the elements on index.html
+```
+	const start_btn = document.querySelector(".start_btn button");
+	const info_box = document.querySelector(".info_box");
+	const exit_btn = info_box.querySelector(".buttons .quit");
+	const continue_btn = info_box.querySelector(".buttons .restart");
+	const quiz_box = document.querySelector(".quiz_box");
+	const result_box = document.querySelector(".result_box");
+	const restart_quiz = result_box.querySelector(".buttons .restart");
+	const quit_quiz = result_box.querySelector(".buttons .quit");
+	const option_list = document.querySelector(".option_list");
+	const time_line = document.querySelector("header .time_line");
+	const timeText = document.querySelector(".timer .time_left_txt");
+	const timeCount = document.querySelector(".timer .timer_sec");
+	const next_btn = document.querySelector("footer .next_btn");
+	const bottom_ques_counter = document.querySelector("footer .total_que");
+```
+<p align="right"><sub>quizApp.js lines 2 - 15</sub></p>
+
+- The file starts with establishing variables which contain elements from index.html
+	- This is done so these elements can be altered (for the case for info_box result_box etc) or to add EventListeners for buttons (start_btn restart etc)
+- As we are creating variables that are "parents" of other elements, in some cases parent.querySelector() can be used over document.querySelector
+	- See exit_btn and continue_btn
+```
+	// if startQuiz button clicked
+	start_btn.addEventListener("click", (e) => {
+	  info_box.classList.add("activeInfo"); //show info box
+	});
+	
+	// if exitQuiz button clicked
+	exit_btn.addEventListener("click", (e) => {
+	  info_box.classList.remove("activeInfo"); //hide info box
+	});
+
+```
+<p align="right"><sub>quizApp.js lines 17 - 25</sub></p>
+
+- While looking through index.html, there were elements listed that are no visible on the page when you first open it, that is because this application is designed around the concept of using buttons to hide or reveal information
+- The sample code showcases how EventListeners are added to buttons to alter the HTML structure
+- 
