@@ -78,6 +78,7 @@ The root directory consists of four items:
 ## CodeBase
 
 ### /index.html
+#### Importing JavaScript files
 - The head is standard, the header includes links to the CSS file, an online font repository, and Javascript files
 ```
 	<script src="js/questions.js" defer></script>
@@ -90,7 +91,7 @@ The root directory consists of four items:
 - As HTML is read top to bottom, and as our JavaScript is linked at the top of the page, we want to “defer” so these lines of HTML are read after the the rest of the HTML is done loading	
   - This is done to help make load times quicker, JavaScript is much more intensive than HTML and CSS and the JavaScript is not going to be what’s immediately visible, unlike HTML and CSS
 
- 
+ #### Creating Elements
 - The body consists of a few elements that will be important to point out for discussion on the JavaScript files later
 ```
 	<div class="start_btn"><button>Start Quiz</button></div>
@@ -199,6 +200,7 @@ The root directory consists of four items:
 - This data will be used by quizApp.js to dynamically change HTML elements as the user progresses through the web application 
 
 ### /js/quizApp.js
+#### Creating Variables From Elements
 - The file that is dynamically changing the elements on index.html
 ```
 	const start_btn = document.querySelector(".start_btn button");
@@ -222,6 +224,7 @@ The root directory consists of four items:
 	- This is done so these elements can be altered (for the case for info_box result_box etc) or to add EventListeners for buttons (start_btn restart etc)
 - As we are creating variables that are "parents" of other elements, in some cases parent.querySelector() can be used over document.querySelector
 	- See exit_btn and continue_btn
+#### Adding Functionalities To Buttons
 ```
 	// if startQuiz button clicked
 	start_btn.addEventListener("click", (e) => {
@@ -238,4 +241,263 @@ The root directory consists of four items:
 
 - While looking through index.html, there were elements listed that are no visible on the page when you first open it, that is because this application is designed around the concept of using buttons to hide or reveal information
 - The sample code showcases how EventListeners are added to buttons to alter the HTML structure
-- 
+- startQuiz "adds" the active
+```
+	continue_btn.addEventListener("click", (e) => {
+	  info_box.classList.remove("activeInfo"); //hide info box
+	  quiz_box.classList.add("activeQuiz"); //show quiz box
+	  showQuetions(0); //calling showQestions function
+	  queCounter(1); //passing 1 parameter to queCounter
+	  startTimer(15); //calling startTimer function
+	  startTimerLine(0); //calling startTimerLine function
+	});
+
+```
+<p align="right"><sub>quizApp.js lines 28 - 35</sub></p>
+
+- This code section adds the functionality of the "start" button that becomes visible as the user is viewing the quiz info panel
+- In short what this piece of code does is get rid of all the current information presented for how the quiz runs replaces it with information pertaining to the first question, it also starts the timer up so it can count down from 15 to 0
+```
+	restart_quiz.addEventListener("click", (e) => {
+	  quiz_box.classList.add("activeQuiz"); //show quiz box
+	  result_box.classList.remove("activeResult"); //hide result box
+	  timeValue = 15;
+	  que_count = 0;
+	  que_numb = 1;
+	  userScore = 0;
+	  widthValue = 0;
+	  showQuetions(que_count); //calling showQestions function
+	  queCounter(que_numb); //passing que_numb value to queCounter
+	  clearInterval(counter); //clear counter
+	  clearInterval(counterLine); //clear counterLine
+	  startTimer(timeValue); //calling startTimer function
+	  startTimerLine(widthValue); //calling startTimerLine function
+	  timeText.textContent = "Time Left"; //change the text of timeText to Time Left
+	  next_btn.classList.remove("show"); //hide the next button
+	});
+```
+<p align="right"><sub>quizApp.js lines 47 - 63</sub></p>
+
+- The restart_quiz button is handled slightly differently
+	- Firstly, as it is being shown at the end of the quiz, it has to hide the previous resaults shown
+	- Then it shows the screen for the new quiz
+	- It also rests all the quiz controls back to their defaults, this helps the quiz know that it is back to number "1" for what question it needs to retrieve from the array in questions.js
+```
+	quit_quiz.addEventListener("click", (e) => {
+	  window.location.reload(); //reload the current window
+	});
+```
+<p align="right"><sub>quizApp.js lines 66 - 68</sub></p>
+
+- This piece of code is how the application handles the user selecting the "quit" button
+- Simply the program reloads the window, this makes it so they are brought back to the landing screen
+```
+	next_btn.addEventListener("click", (e) => {
+	  //check if it does not exceed max questions
+	  if (que_count < questions.length - 1) {
+	    que_count++; //increment the que_count value
+	    que_numb++; //increment the que_numb value
+	    showQuetions(que_count); //calling showQestions function
+	    queCounter(que_numb); //passing que_numb value to queCounter
+	    clearInterval(counter); //clear counter
+	    clearInterval(counterLine); //clear counterLine
+	    startTimer(timeValue); //calling startTimer function
+	    startTimerLine(widthValue); //calling startTimerLine function
+	    timeText.textContent = "Time Left"; //change the timeText to Time Left
+	    next_btn.classList.remove("show"); //hide the next button
+	  } else {
+	    clearInterval(counter); //clear counter
+	    clearInterval(counterLine); //clear counterLine
+	    showResult(); //calling showResult function
+	  }
+	});
+```
+<p align="right"><sub>quizApp.js lines 71 - 89</sub></p>
+
+- This code section adds the functionality of the "next question" button that becomes visible after the user selects an answer or the timer runs out
+- If the program still has questions to show (i.e. the current question number isn't 5) increment the question number and count and use those new values to update the screen to show the next quiz question and possible answers
+- If the quiz is current on question 5, go to the results screen to show the user their score
+```
+	function showQuetions(index) {
+  		const que_text = document.querySelector(".que_text");
+		...
+		...
+	}
+```
+<p align="right"><sub>quizApp.js lines 93 - 126</sub></p>
+
+- showQuetions is a bigger function written later on in the code
+- It's purpose is to show the question and possible answers for the current question number
+```
+	  let que_tag =
+	    "<span>" +
+	    questions[index].numb +
+	    ". " +
+	    questions[index].question +
+	    "</span>";
+	  let option_tag =
+	    '<div class="option"><span>' +
+	    questions[index].options[0] +
+	    "</span></div>" +
+	    '<div class="option"><span>' +
+	    questions[index].options[1] +
+	    "</span></div>" +
+	    '<div class="option"><span>' +
+	    questions[index].options[2] +
+	    "</span></div>" +
+	    '<div class="option"><span>' +
+	    questions[index].options[3] +
+	    "</span></div>";
+	  que_text.innerHTML = que_tag; //adding new (child) span tag inside que_tag
+	  option_list.innerHTML = option_tag; //adding new (child) div tag inside option_tag
+```
+<p align="right"><sub>quizApp.js lines 98 - 118</sub></p>
+
+- showQuetions uses the index given (which corresponds to the current question number) to create HTML elements
+	- Firstly, it gets the number and question from the questions array, this data is formed into HTML (in the form of a JavaScript string) and then placed into a variable
+	- This variable is called to add it to the HTML of que_text, an element that correspond with the HTML element "que_text", making this variable a child of que_text
+ 	- This process is repeated to get a list of possible answers as well, these elements are added to the "option_list" element as a child
+```
+	for (i = 0; i < option.length; i++) {
+		option[i].setAttribute("onclick", "optionSelected(this)");
+	}
+```
+<p align="right"><sub>quizApp.js lines 123 - 125</sub></p>  
+
+- At the end of this function, an array is used to go through all the elements in options (which is the list of possible answers), this array calls to a function that will add an EventListener to each option
+#### Running The Quiz
+```
+	function optionSelected(answer) {
+		clearInterval(counter); //clear counter
+		clearInterval(counterLine); //clear counterLine
+		let userAns = answer.textContent; //getting user selected option
+		let correcAns = questions[que_count].answer; //getting correct answer from array
+		const allOptions = option_list.children.length; //getting all option items
+		...
+		...
+	}
+```
+<p align="right"><sub>quizApp.js lines 132 - 164</sub></p>  
+
+- This function takes in an "answer" paramater (an answer the user selected out of four on the quiz)
+- As the user selected an aswer, the timer stops
+```
+	if (userAns == correcAns) {
+	    userScore += 1; //update total score value increment by 1
+	    answer.classList.add("correct"); //add green color to correct selected option
+	    answer.insertAdjacentHTML("beforeend", tickIconTag); //add tick icon to correct selected option
+	    console.log("Correct Answer");
+	    console.log("Your correct answers = " + userScore);
+	  } else {
+	    answer.classList.add("incorrect"); //add red color to correct selected option
+	    answer.insertAdjacentHTML("beforeend", crossIconTag); //add cross icon to correct selected option
+	    console.log("Wrong Answer");
+	
+	    for (i = 0; i < allOptions; i++) {
+	      if (option_list.children[i].textContent == correcAns) {
+	        //if there is an option which is matched to an array answer
+	        option_list.children[i].setAttribute("class", "option correct"); //add green color to matched option
+	        option_list.children[i].insertAdjacentHTML("beforeend", tickIconTag); //add tick icon to matched option
+	        console.log("Auto selected correct answer.");
+	      }
+	    }
+	  }
+	  for (i = 0; i < allOptions; i++) {
+	    option_list.children[i].classList.add("disabled"); //once user select an option, disable all options
+	  }
+	  next_btn.classList.add("show"); //show the next button if user selected any option
+	}
+```
+<p align="right"><sub>quizApp.js lines 140 - 163</sub></p>  
+
+- The function first checks if the user answered correctly or wrong
+	- If the user answered correct, their tracked score will go up and the answer button will turn green
+ 	- If the user answered wrong, the answer button will turn red
+- The program also goes through the options and adds in the green color to the correct answer manually
+	- This is done for the case where the user does not select the right answer, they still need to be shown what the correct one was even if they did not select it
+- The final for loop is the function preventing the user from clicking another button (by disabling all the other answer buttons) after the user has selected an answer
+```
+	function showResult() {
+	  info_box.classList.remove("activeInfo"); //hide info box
+	  quiz_box.classList.remove("activeQuiz"); //hide quiz box
+	  result_box.classList.add("activeResult"); //show result box
+	  const scoreText = result_box.querySelector(".score_text");
+	  if (userScore > 3) {
+	    // if user scored more than 3
+	    //create a new span tag and pass the user score number and total question number
+	    let scoreTag =
+	      "<span>and congrats! , You got <p>" +
+	      userScore +
+	      "</p> out of <p>" +
+	      questions.length +
+	      "</p></span>";
+	    scoreText.innerHTML = scoreTag; //add new span tag inside score_Text
+	  } else if (userScore > 1) {
+	    // if user scored more than 1
+	    let scoreTag =
+	      "<span>and nice , You got <p>" +
+	      userScore +
+	      "</p> out of <p>" +
+	      questions.length +
+	      "</p></span>";
+	    scoreText.innerHTML = scoreTag;
+	  } else {
+	    // if user scored less than 1
+	    let scoreTag =
+	      "<span>and sorry , You got only <p>" +
+	      userScore +
+	      "</p> out of <p>" +
+	      questions.length +
+	      "</p></span>";
+	    scoreText.innerHTML = scoreTag;
+	  }
+	}
+```
+<p align="right"><sub>quizApp.js lines 167 - 201</sub></p>  
+
+- After question 5 the results will be shown to the user, the program will remove the quiz screen to show the results
+- The application will check what the users score is and alter what it says to discuss the users score (a higher score corresponds to a more celebratory message), along with returning said score to the user
+#### Showing Changing Elements
+```
+	function startTimer(time) {
+	  ...
+	  if (time < 9) {
+	      //if timer is less than 9
+	      let addZero = timeCount.textContent;
+	      timeCount.textContent = "0" + addZero; //add a 0 before time value
+          }
+          ...
+	}
+	function startTimerLine(time) {
+	  ...
+          time_line.style.width = time + "px"; //increasing width of time_line with px by time value
+          ...
+	}
+```
+<p align="right"><sub>quizApp.js lines 204 - 247</sub></p>  
+
+- Some of the final methods are handling the timer operations
+- startTimer takes in an input and countsdown from that input to zero, all while dymaically altering the text on screen to match
+	- For styling, the function will check if the time is lower than ten, and add a zero in front of the current time if so to keep the "##" format
+- startTimerLine also takes in the time anse users the current time to add a progress bar to visually show the user how much time they have left
+```
+	function queCounter(index) {
+	  //creating a new span tag and passing the question number and total question
+	  let totalQueCounTag =
+	    "<span><p>" +
+	    index +
+	    "</p> of <p>" +
+	    questions.length +
+	    "</p> Questions</span>";
+	  bottom_ques_counter.innerHTML = totalQueCounTag; //adding new span tag inside bottom_ques_counter
+	}
+```
+<p align="right"><sub>quizApp.js lines 249 - 258</sub></p>  
+
+- The final code piece in quizApp.js updates the HTML on screen to show the current question the user is on
+	- This is done by creating a variable which holds a String containing HTML, this variable is added as a child element to the bottom_ques_counter
+
+### /css/style.css
+- The CSS  for the program is standard, it is all stored in one file
+- The CSS starts with setting the margin and padding to zero (to make styling more controllable) as well as importing a font from a font repository
+- From there each element is individually styled to give the quiz app a cohesive aesthetic
