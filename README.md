@@ -80,7 +80,7 @@ The root directory consists of four items:
 ### /index.html
 #### Importing JavaScript files
 - The head is standard, the header includes links to the CSS file, an online font repository, and Javascript files
-```
+```html
 	<script src="js/questions.js" defer></script>
 
 	<script src="js/quizApp.js" defer></script>
@@ -93,13 +93,13 @@ The root directory consists of four items:
 
  #### Creating Elements
 - The body consists of a few elements that will be important to point out for discussion on the JavaScript files later
-```
+```html
 	<div class="start_btn"><button>Start Quiz</button></div>
 ```
 <p align="right"><sub>index.html line 21</sub></p>
 
 - The start button (“start_btn”) that shows up on the landing page
-```
+```html
 	<div class="info_box">
 	    	...
 		...
@@ -114,7 +114,7 @@ The root directory consists of four items:
 
 - The instructions (“info_box”) that describe to the user how the quiz works
 	- The button of this box includes two buttons, wrapped in a class called “buttons:”, one name “quit” and the other named “restart”
-```
+```html
 	<div class="quiz_box">
 	    	<header>
 	        	<div class="title">Demo Quiz App in JavaScript</div>
@@ -148,7 +148,7 @@ The root directory consists of four items:
 	- The header includes both the countdown timer (“timer_sec”) and the progress bar (“time_line”)
 	- The section consists of the question text and question possible answers (which will be added from the questions.js file) for each question
 	- And the footer contains the question total (which will let the user know which question they are on out of five), and the next question button (“next_button”)
-```
+```html
 	<div class="result_box">
 		<div class="icon">
 			<i class="fas fa-crown"></i>
@@ -172,7 +172,7 @@ The root directory consists of four items:
 ### /js/questions.js
 - A data structure to organize information about each question
 - The file stores an array, questions, which stores multiple objects
-```
+```javascript
 	let questions = [
   	{
 		numb: 1,
@@ -202,7 +202,7 @@ The root directory consists of four items:
 ### /js/quizApp.js
 #### Creating Variables From Elements
 - The file that is dynamically changing the elements on index.html
-```
+```javascript
 	const start_btn = document.querySelector(".start_btn button");
 	const info_box = document.querySelector(".info_box");
 	const exit_btn = info_box.querySelector(".buttons .quit");
@@ -225,7 +225,7 @@ The root directory consists of four items:
 - As we are creating variables that are "parents" of other elements, in some cases parent.querySelector() can be used over document.querySelector
 	- See exit_btn and continue_btn
 #### Adding Functionalities To Buttons
-```
+```javascript
 	// if startQuiz button clicked
 	start_btn.addEventListener("click", (e) => {
 	  info_box.classList.add("activeInfo"); //show info box
@@ -242,7 +242,7 @@ The root directory consists of four items:
 - While looking through index.html, there were elements listed that are no visible on the page when you first open it, that is because this application is designed around the concept of using buttons to hide or reveal information
 - The sample code showcases how EventListeners are added to buttons to alter the HTML structure
 - startQuiz "adds" the active
-```
+```javascript
 	continue_btn.addEventListener("click", (e) => {
 	  info_box.classList.remove("activeInfo"); //hide info box
 	  quiz_box.classList.add("activeQuiz"); //show quiz box
@@ -257,7 +257,7 @@ The root directory consists of four items:
 
 - This code section adds the functionality of the "start" button that becomes visible as the user is viewing the quiz info panel
 - In short what this piece of code does is get rid of all the current information presented for how the quiz runs replaces it with information pertaining to the first question, it also starts the timer up so it can count down from 15 to 0
-```
+```javascript
 	restart_quiz.addEventListener("click", (e) => {
 	  quiz_box.classList.add("activeQuiz"); //show quiz box
 	  result_box.classList.remove("activeResult"); //hide result box
@@ -282,7 +282,7 @@ The root directory consists of four items:
 	- Firstly, as it is being shown at the end of the quiz, it has to hide the previous resaults shown
 	- Then it shows the screen for the new quiz
 	- It also rests all the quiz controls back to their defaults, this helps the quiz know that it is back to number "1" for what question it needs to retrieve from the array in questions.js
-```
+```javascript
 	quit_quiz.addEventListener("click", (e) => {
 	  window.location.reload(); //reload the current window
 	});
@@ -291,7 +291,7 @@ The root directory consists of four items:
 
 - This piece of code is how the application handles the user selecting the "quit" button
 - Simply the program reloads the window, this makes it so they are brought back to the landing screen
-```
+```javascript
 	next_btn.addEventListener("click", (e) => {
 	  //check if it does not exceed max questions
 	  if (que_count < questions.length - 1) {
@@ -317,7 +317,7 @@ The root directory consists of four items:
 - This code section adds the functionality of the "next question" button that becomes visible after the user selects an answer or the timer runs out
 - If the program still has questions to show (i.e. the current question number isn't 5) increment the question number and count and use those new values to update the screen to show the next quiz question and possible answers
 - If the quiz is current on question 5, go to the results screen to show the user their score
-```
+```javascript
 	function showQuetions(index) {
   		const que_text = document.querySelector(".que_text");
 		...
@@ -328,7 +328,7 @@ The root directory consists of four items:
 
 - showQuetions is a bigger function written later on in the code
 - It's purpose is to show the question and possible answers for the current question number
-```
+```javascript
 	  let que_tag =
 	    "<span>" +
 	    questions[index].numb +
@@ -357,7 +357,7 @@ The root directory consists of four items:
 	- Firstly, it gets the number and question from the questions array, this data is formed into HTML (in the form of a JavaScript string) and then placed into a variable
 	- This variable is called to add it to the HTML of que_text, an element that correspond with the HTML element "que_text", making this variable a child of que_text
  	- This process is repeated to get a list of possible answers as well, these elements are added to the "option_list" element as a child
-```
+```javascript
 	for (i = 0; i < option.length; i++) {
 		option[i].setAttribute("onclick", "optionSelected(this)");
 	}
@@ -366,7 +366,7 @@ The root directory consists of four items:
 
 - At the end of this function, an array is used to go through all the elements in options (which is the list of possible answers), this array calls to a function that will add an EventListener to each option
 #### Running The Quiz
-```
+```javascript
 	function optionSelected(answer) {
 		clearInterval(counter); //clear counter
 		clearInterval(counterLine); //clear counterLine
@@ -381,7 +381,7 @@ The root directory consists of four items:
 
 - This function takes in an "answer" paramater (an answer the user selected out of four on the quiz)
 - As the user selected an aswer, the timer stops
-```
+```javascript
 	if (userAns == correcAns) {
 	    userScore += 1; //update total score value increment by 1
 	    answer.classList.add("correct"); //add green color to correct selected option
@@ -416,7 +416,7 @@ The root directory consists of four items:
 - The program also goes through the options and adds in the green color to the correct answer manually
 	- This is done for the case where the user does not select the right answer, they still need to be shown what the correct one was even if they did not select it
 - The final for loop is the function preventing the user from clicking another button (by disabling all the other answer buttons) after the user has selected an answer
-```
+```javascript
 	function showResult() {
 	  info_box.classList.remove("activeInfo"); //hide info box
 	  quiz_box.classList.remove("activeQuiz"); //hide quiz box
@@ -458,7 +458,7 @@ The root directory consists of four items:
 - After question 5 the results will be shown to the user, the program will remove the quiz screen to show the results
 - The application will check what the users score is and alter what it says to discuss the users score (a higher score corresponds to a more celebratory message), along with returning said score to the user
 #### Showing Changing Elements
-```
+```javascript
 	function startTimer(time) {
 	  ...
 	  if (time < 9) {
@@ -480,7 +480,7 @@ The root directory consists of four items:
 - startTimer takes in an input and countsdown from that input to zero, all while dymaically altering the text on screen to match
 	- For styling, the function will check if the time is lower than ten, and add a zero in front of the current time if so to keep the "##" format
 - startTimerLine also takes in the time anse users the current time to add a progress bar to visually show the user how much time they have left
-```
+```javascript
 	function queCounter(index) {
 	  //creating a new span tag and passing the question number and total question
 	  let totalQueCounTag =
